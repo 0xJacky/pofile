@@ -1,7 +1,6 @@
 package pofile
 
 import (
-	"fmt"
 	"github.com/itchyny/timefmt-go"
 	"github.com/pkg/errors"
 	"io/ioutil"
@@ -218,10 +217,10 @@ func (p *Pofile) ToDict() (dict Dict) {
 			continue
 		}
 
-		fmt.Println("Msgctxt", item.Msgctxt)
-		fmt.Println("MsgId", item.MsgId)
-		fmt.Println("MsgIdPlural", item.MsgIdPlural)
-		fmt.Println("MsgStr", item.MsgStr)
+		// fmt.Println("Msgctxt", item.Msgctxt)
+		// fmt.Println("MsgId", item.MsgId)
+		// fmt.Println("MsgIdPlural", item.MsgIdPlural)
+		// fmt.Println("MsgStr", item.MsgStr)
 		var tmp interface{}
 		if len(item.MsgStr) == 1 {
 			tmp = item.MsgStr[0]
