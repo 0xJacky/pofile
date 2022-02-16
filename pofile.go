@@ -129,7 +129,8 @@ func parse(path string) (p *Pofile, err error) {
 					continue
 				}
 				item.Msgctxt += matchSlice[1]
-			} else if strings.HasPrefix(line, "msgid") {
+			} else if strings.HasPrefix(line, "msgid") &&
+				!strings.HasPrefix(line, "msgid_plural") {
 				regExp := regexp.MustCompile("^msgid\\s+\"(.*)\"")
 				matchSlice := regExp.FindStringSubmatch(line)
 				state = MSGID
