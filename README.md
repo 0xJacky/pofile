@@ -13,10 +13,10 @@ package test
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/0xJacky/pofile"
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	"pofile"
 	"testing"
 )
 
@@ -56,9 +56,26 @@ func TestPofile(t *testing.T) {
 		fmt.Println("==========")
 	}
 
-    // Test Pofile ToDict
+	// Test Pofile ToDict
 	bytes, _ := json.Marshal(p.ToDict())
 	_ = ioutil.WriteFile("output_test.json", bytes, 0644)
+
+	fmt.Println("Test Pofile ToDict")
+	fmt.Println(p.ToDict())
+	dict := make(pofile.Dict)
+
+	lang := []string{"de", "en", "fr", "ja", "ko", "zh_TW"}
+
+	for _, v := range lang {
+		p, err = pofile.Parse(filepath.Join("locale", v, "LC_MESSAGES", "app.po"))
+		if err != nil {
+			log.Fatalln(err)
+		}
+		dict[p.Header.Language] = p.ToDict()
+	}
+
+	bytes, _ = json.Marshal(dict)
+	_ = ioutil.WriteFile("translates.json", bytes, 0644)
 }
 
 ```

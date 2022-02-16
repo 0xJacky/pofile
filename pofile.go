@@ -30,7 +30,7 @@ func parseHeader(item Item) (h *Header, err error) {
 	// fmt.Println(item.MsgStr[0])
 	for i := 0; i < v.NumField()-1; i++ {
 		key := v.Type().Field(i).Tag.Get("key")
-		regExp := regexp.MustCompile(key + ":[ ]+(.*?)\\\\n")
+		regExp := regexp.MustCompile(key + `:[ ]+(.*?)\\n`)
 		matchSlice := regExp.FindStringSubmatch(item.MsgStr[0])
 		if len(matchSlice) < 1 {
 			err = errors.Wrap(err, "error parsing po header")

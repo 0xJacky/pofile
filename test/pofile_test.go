@@ -3,10 +3,10 @@ package test
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/0xJacky/pofile"
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	"pofile"
 	"testing"
 )
 
