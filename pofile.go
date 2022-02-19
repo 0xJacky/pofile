@@ -152,6 +152,9 @@ func parse(path string) (p *Pofile, err error) {
 					continue
 				}
 				item.MsgIdPlural += matchSlice[1]
+			} else if strings.HasPrefix(line, "#~") {
+				// ignore
+				continue
 			} else {
 				strRegExp := regexp.MustCompile("\"(.*)\"")
 				matchSlice := strRegExp.FindStringSubmatch(line)
