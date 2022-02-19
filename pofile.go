@@ -73,7 +73,7 @@ func parse(path string) (p *Pofile, err error) {
 			var start int
 			for start = i - 1; start >= 0; start-- {
 				if !strings.HasPrefix(lines[start], "msgctxt") &&
-					strings.HasSuffix(lines[start], "\"") {
+					strings.HasSuffix(strings.TrimSpace(lines[start]), "\"") {
 					start++
 					break
 				}
@@ -215,10 +215,10 @@ func (p *Pofile) ToDict() (dict Dict) {
 			continue
 		}
 
-		// fmt.Println("Msgctxt", item.Msgctxt)
-		// fmt.Println("MsgId", item.MsgId)
-		// fmt.Println("MsgIdPlural", item.MsgIdPlural)
-		// fmt.Println("MsgStr", item.MsgStr)
+		//fmt.Println("Msgctxt", item.Msgctxt)
+		//fmt.Println("MsgId", item.MsgId)
+		//fmt.Println("MsgIdPlural", item.MsgIdPlural)
+		//fmt.Println("MsgStr", item.MsgStr)
 		var tmp interface{}
 		if len(item.MsgStr) == 1 {
 			tmp = item.MsgStr[0]
