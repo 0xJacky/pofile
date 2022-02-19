@@ -32,11 +32,9 @@ func parseHeader(item Item) (h *Header, err error) {
 		regExp := regexp.MustCompile(key + `:[ ]+(.*?)\\n`)
 		matchSlice := regExp.FindStringSubmatch(item.MsgStr[0])
 		if len(matchSlice) < 1 {
-			err = errors.Wrap(err, "error parsing po header")
-			break
+			continue
 		}
 		match := strings.ReplaceAll(matchSlice[1], "\\n", "")
-		// fmt.Println(match)
 		if v.Type().Field(i).Type.String() == "string" {
 			v.Field(i).Set(reflect.ValueOf(match))
 		}

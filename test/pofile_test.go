@@ -11,7 +11,7 @@ import (
 )
 
 func TestPofile(t *testing.T) {
-	p, err := pofile.Parse("en.po")
+	p, err := pofile.Parse("app.po")
 	if err != nil {
 		log.Fatalln(err)
 	}
