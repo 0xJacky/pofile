@@ -154,7 +154,7 @@ func parse(path string) (p *Pofile, err error) {
 				item.MsgIdPlural += matchSlice[1]
 			} else if strings.HasPrefix(line, "#~") {
 				// ignore
-				continue
+				break
 			} else {
 				strRegExp := regexp.MustCompile("\"(.*)\"")
 				matchSlice := strRegExp.FindStringSubmatch(line)
@@ -175,7 +175,9 @@ func parse(path string) (p *Pofile, err error) {
 		}
 		// fmt.Println(item)
 		// fmt.Println("=========")
-		p.Items = append(p.Items, item)
+		if item.MsgId != "" {
+			p.Items = append(p.Items, item)
+		}
 	}
 
 	// parse Header
