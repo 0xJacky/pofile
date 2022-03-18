@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Chinese (Simplified) (Hello BetaHub Project)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-15 01:52+0000\n"
+"POT-Creation-Date: 2022-03-18 09:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Chinese (Simplified) <http://hello.betahub.cn/projects/"
@@ -13,6 +13,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.10.1\n"
+
+#: src/pages/surface/components/Status/StatusCard.vue:41
+#, read-only
+msgid "%{date} 有更新"
+msgstr "%{date} 有更新"
 
 #: src/pages/surface/router.js:73
 #, read-only
@@ -47,17 +52,32 @@ msgstr "下载链接已拷贝到您的剪切板啦~"
 msgid "下载链接拷贝失败"
 msgstr "下载链接拷贝失败"
 
-#: src/pages/surface/layouts/Widget.vue:27
+#: src/pages/surface/layouts/Widget.vue:32
 #, read-only
 msgid "以下是我们特别赞助商的产品。"
 msgstr "以下是我们特别赞助商的产品。"
+
+#: src/pages/user/views/project/Project.vue:64
+#, read-only
+msgid "保存失败"
+msgstr "保存失败"
+
+#: src/pages/user/views/project/Project.vue:60
+#, read-only
+msgid "保存成功"
+msgstr "保存成功"
+
+#: src/pages/user/views/project/Project.vue:102
+#, read-only
+msgid "修改项目"
+msgstr "修改项目"
 
 #: src/components/Card/SubCard.vue:19
 #, read-only
 msgid "候选发布版"
 msgstr "候选发布版"
 
-#: src/pages/surface/layouts/Widget.vue:10,
+#: src/pages/surface/layouts/Widget.vue:13,
 #: src/pages/surface/layouts/Widget.vue:1
 #, read-only
 msgid "全靠捐助养自己"
@@ -68,7 +88,7 @@ msgstr "全靠捐助养自己"
 msgid "公众号 ID 已拷贝到您的剪切板啦~"
 msgstr "公众号 ID 已拷贝到您的剪切板啦~"
 
-#: src/pages/surface/layouts/Widget.vue:49
+#: src/pages/surface/layouts/Widget.vue:51
 #, read-only
 msgid "公告"
 msgstr "公告"
@@ -97,6 +117,16 @@ msgstr "再次下载"
 msgid "再次复制"
 msgstr "再次复制"
 
+#: src/pages/surface/components/Status/StatusList.vue:2
+#, read-only
+msgid "最新动态"
+msgstr "最新动态"
+
+#: src/pages/user/views/project/Project.vue:18
+#, read-only
+msgid "创建时间："
+msgstr "创建时间："
+
 #: src/pages/surface/layouts/Widget.vue:45
 #, read-only
 msgid "加入 TG 群组"
@@ -121,6 +151,11 @@ msgstr "即刻尝鲜"
 #, read-only
 msgid "即可向我们捐赠"
 msgstr "即可向我们捐赠"
+
+#: src/pages/surface/components/Status/StatusCard.vue:11
+#, read-only
+msgid "发布于"
+msgstr "发布于"
 
 #: src/pages/surface/views/firmware/DevicesList.vue:20,
 #: src/pages/surface/views/firmware/FirmwaresList.vue:41
@@ -216,7 +251,7 @@ msgstr "奶牛快传下载"
 msgid "好心人"
 msgstr "好心人"
 
-#: src/pages/surface/layouts/Widget.vue:11,
+#: src/pages/surface/layouts/Widget.vue:14,
 #: src/pages/surface/layouts/Widget.vue:2
 #, read-only
 msgid "如果有幸帮到你"
@@ -232,7 +267,6 @@ msgstr "安装描述文件"
 msgid "尝鲜派"
 msgstr "尝鲜派"
 
-#: src/pages/manage/views/other/About.vue:8,
 #: src/pages/surface/components/FooterComponent.vue:7
 #, read-only
 msgid "开发模式"
@@ -285,7 +319,7 @@ msgstr "感谢您~"
 msgid "成为特别赞助商"
 msgstr "成为特别赞助商"
 
-#: src/pages/surface/layouts/Widget.vue:139
+#: src/pages/surface/layouts/Widget.vue:156
 #, read-only
 msgid "找到我们"
 msgstr "找到我们"
@@ -302,14 +336,14 @@ msgstr "报告问题"
 msgid "捐助"
 msgstr "捐助"
 
-#: src/pages/surface/layouts/Widget.vue:20,
+#: src/pages/surface/layouts/Widget.vue:23,
 #: src/pages/surface/views/Install.vue:17,
 #: src/pages/surface/views/Install.vue:14
 #, read-only
 msgid "捐助我们"
 msgstr "捐助我们"
 
-#: src/pages/surface/layouts/Widget.vue:12,
+#: src/pages/surface/layouts/Widget.vue:15,
 #: src/pages/surface/layouts/Widget.vue:3
 #, read-only
 msgid "捐助我们别吝惜"
@@ -325,17 +359,32 @@ msgstr "捐助榜"
 msgid "捐助金额"
 msgstr "捐助金额"
 
+#: src/pages/user/views/project/Project.vue:14
+#, read-only
+msgid "描述："
+msgstr "描述："
+
 #: src/pages/surface/views/Install.vue:32,
 #: src/pages/surface/views/Install.vue:56
 #, read-only
 msgid "描述文件的链接已复制到您的剪贴板，请参照这篇教程来使用"
 msgstr "描述文件的链接已复制到您的剪贴板，请参照这篇教程来使用"
 
+#: src/pages/surface/components/Status/StatusCard.vue:21
+#, read-only
+msgid "提供"
+msgstr "提供"
+
 #: src/pages/surface/views/firmware/FirmwareDetail.vue:13,
 #: src/pages/surface/views/firmware/FirmwareDetail.vue:11
 #, read-only
 msgid "文件大小:"
 msgstr "文件大小:"
+
+#: src/pages/user/views/project/Project.vue:102
+#, read-only
+msgid "新建项目"
+msgstr "新建项目"
 
 #: src/pages/surface/components/FooterComponent.vue:2
 #, read-only
@@ -357,11 +406,26 @@ msgstr "日语"
 msgid "昵称"
 msgstr "昵称"
 
+#: src/pages/surface/components/Status/StatusList.vue:13
+#, read-only
+msgid "显示更多"
+msgstr "显示更多"
+
+#: src/pages/surface/components/Status/StatusList.vue:10
+#, read-only
+msgid "暂无更多动态"
+msgstr "暂无更多动态"
+
 #: src/pages/surface/views/firmware/FirmwareDetail.vue:73,
 #: src/pages/surface/views/firmware/FirmwareDetail.vue:71
 #, read-only
 msgid "更新日志"
 msgstr "更新日志"
+
+#: src/pages/user/views/project/Project.vue:54
+#, read-only
+msgid "服务器错误"
+msgstr "服务器错误"
 
 #: src/pages/surface/router.js:78
 #, read-only
@@ -391,7 +455,7 @@ msgstr "法语"
 msgid "版本"
 msgstr "版本"
 
-#: src/pages/surface/layouts/Widget.vue:115
+#: src/pages/surface/layouts/Widget.vue:127
 #, read-only
 msgid "特别赞助"
 msgstr "特别赞助"
@@ -417,7 +481,12 @@ msgstr "简体中文"
 msgid "繁体中文"
 msgstr "繁体中文"
 
-#: src/pages/surface/layouts/Widget.vue:8
+#: src/pages/user/views/project/Project.vue:6
+#, read-only
+msgid "编辑"
+msgstr "编辑"
+
+#: src/pages/surface/layouts/Widget.vue:11
 #, read-only
 msgid "网站现在不盈利"
 msgstr "网站现在不盈利"
@@ -504,7 +573,7 @@ msgstr "请选择您需要下载的固件版本，验证状态绿色标识为「
 msgid "返回上一级"
 msgstr "返回上一级"
 
-#: src/pages/surface/layouts/Widget.vue:29
+#: src/pages/surface/layouts/Widget.vue:34
 #, read-only
 msgid "销售额的一部分会作为网站的经费："
 msgstr "销售额的一部分会作为网站的经费："
@@ -518,6 +587,16 @@ msgstr "阅读教程"
 #, read-only
 msgid "韩语"
 msgstr "韩语"
+
+#: src/pages/user/views/project/Project.vue:7
+#, read-only
+msgid "项目名称"
+msgstr "项目名称"
+
+#: src/pages/user/views/project/Project.vue:13
+#, read-only
+msgid "项目描述"
+msgstr "项目描述"
 
 #: src/pages/surface/components/HeaderComponent.vue:15,
 #: src/pages/surface/components/HeaderComponent.vue:36,

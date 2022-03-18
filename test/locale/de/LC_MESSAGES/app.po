@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: German (Hello BetaHub Project)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-15 01:52+0000\n"
+"POT-Creation-Date: 2022-03-18 09:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German <http://hello.betahub.cn/projects/Betahub/betahub/de/>"
@@ -13,6 +13,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.10.1\n"
+
+#: src/pages/surface/components/Status/StatusCard.vue:41
+msgid "%{date} 有更新"
+msgstr ""
 
 #: src/pages/surface/router.js:73
 msgid "404页面"
@@ -41,15 +45,27 @@ msgstr "Der Download-Link wurde in Ihre Zwischenablage kopiert~"
 msgid "下载链接拷贝失败"
 msgstr "Der Download-Link konnte nicht kopiert werden"
 
-#: src/pages/surface/layouts/Widget.vue:27
+#: src/pages/surface/layouts/Widget.vue:32
 msgid "以下是我们特别赞助商的产品。"
 msgstr "Im Folgenden sind die Produkte unserer Sponsoren."
+
+#: src/pages/user/views/project/Project.vue:64
+msgid "保存失败"
+msgstr ""
+
+#: src/pages/user/views/project/Project.vue:60
+msgid "保存成功"
+msgstr ""
+
+#: src/pages/user/views/project/Project.vue:102
+msgid "修改项目"
+msgstr ""
 
 #: src/components/Card/SubCard.vue:19
 msgid "候选发布版"
 msgstr "RC-Version"
 
-#: src/pages/surface/layouts/Widget.vue:10,
+#: src/pages/surface/layouts/Widget.vue:13,
 #: src/pages/surface/layouts/Widget.vue:1
 msgid "全靠捐助养自己"
 msgstr "Ernähren Sie sich alle durch Spenden"
@@ -58,7 +74,7 @@ msgstr "Ernähren Sie sich alle durch Spenden"
 msgid "公众号 ID 已拷贝到您的剪切板啦~"
 msgstr "Die Offizielle Konten-ID wurde in Ihre Zwischenablage kopiert~"
 
-#: src/pages/surface/layouts/Widget.vue:49
+#: src/pages/surface/layouts/Widget.vue:51
 msgid "公告"
 msgstr "Anschlag"
 
@@ -82,6 +98,14 @@ msgstr "wieder laden"
 msgid "再次复制"
 msgstr "wieder kopieren"
 
+#: src/pages/surface/components/Status/StatusList.vue:2
+msgid "最新动态"
+msgstr ""
+
+#: src/pages/user/views/project/Project.vue:18
+msgid "创建时间："
+msgstr ""
+
 #: src/pages/surface/layouts/Widget.vue:45
 msgid "加入 TG 群组"
 msgstr "Bei Telegram"
@@ -102,6 +126,10 @@ msgstr "Versuch's jetzt"
 #: src/pages/surface/views/page/Donate.vue:4
 msgid "即可向我们捐赠"
 msgstr "Kann uns spenden"
+
+#: src/pages/surface/components/Status/StatusCard.vue:11
+msgid "发布于"
+msgstr ""
 
 #: src/pages/surface/views/firmware/DevicesList.vue:20,
 #: src/pages/surface/views/firmware/FirmwaresList.vue:41
@@ -181,7 +209,7 @@ msgstr "Cowtransfer laden"
 msgid "好心人"
 msgstr "Gutherziger Man"
 
-#: src/pages/surface/layouts/Widget.vue:11,
+#: src/pages/surface/layouts/Widget.vue:14,
 #: src/pages/surface/layouts/Widget.vue:2
 msgid "如果有幸帮到你"
 msgstr "Wenn ich das Glück habe, Ihnen zu helfen"
@@ -194,7 +222,6 @@ msgstr "Profil installieren"
 msgid "尝鲜派"
 msgstr "BetaHub"
 
-#: src/pages/manage/views/other/About.vue:8,
 #: src/pages/surface/components/FooterComponent.vue:7
 msgid "开发模式"
 msgstr "Developer-Programm"
@@ -242,7 +269,7 @@ msgstr "Dankschön~"
 msgid "成为特别赞助商"
 msgstr "Werden Sie ein besonderer Sponsor"
 
-#: src/pages/surface/layouts/Widget.vue:139
+#: src/pages/surface/layouts/Widget.vue:156
 msgid "找到我们"
 msgstr "Finde uns"
 
@@ -256,13 +283,13 @@ msgstr "Prüfbericht"
 msgid "捐助"
 msgstr "Spenden"
 
-#: src/pages/surface/layouts/Widget.vue:20,
+#: src/pages/surface/layouts/Widget.vue:23,
 #: src/pages/surface/views/Install.vue:17,
 #: src/pages/surface/views/Install.vue:14
 msgid "捐助我们"
 msgstr "Spenden Sie an uns"
 
-#: src/pages/surface/layouts/Widget.vue:12,
+#: src/pages/surface/layouts/Widget.vue:15,
 #: src/pages/surface/layouts/Widget.vue:3
 msgid "捐助我们别吝惜"
 msgstr "Bitte spenden Sie für uns, seien Sie nicht geizig"
@@ -275,6 +302,10 @@ msgstr "Spendenliste"
 msgid "捐助金额"
 msgstr "Spendenbetrag"
 
+#: src/pages/user/views/project/Project.vue:14
+msgid "描述："
+msgstr ""
+
 #: src/pages/surface/views/Install.vue:32,
 #: src/pages/surface/views/Install.vue:56
 msgid "描述文件的链接已复制到您的剪贴板，请参照这篇教程来使用"
@@ -282,10 +313,18 @@ msgstr ""
 "Der Link des Profil wurde in Ihre Zwischenablage kopiert, bitte verwenden "
 "Sie dieses Tutorial"
 
+#: src/pages/surface/components/Status/StatusCard.vue:21
+msgid "提供"
+msgstr ""
+
 #: src/pages/surface/views/firmware/FirmwareDetail.vue:13,
 #: src/pages/surface/views/firmware/FirmwareDetail.vue:11
 msgid "文件大小:"
 msgstr "Dateigröße:"
+
+#: src/pages/user/views/project/Project.vue:102
+msgid "新建项目"
+msgstr ""
 
 #: src/pages/surface/components/FooterComponent.vue:2
 msgid "无派科技（深圳）有限公司"
@@ -303,10 +342,22 @@ msgstr "Japanisch"
 msgid "昵称"
 msgstr "Name"
 
+#: src/pages/surface/components/Status/StatusList.vue:13
+msgid "显示更多"
+msgstr ""
+
+#: src/pages/surface/components/Status/StatusList.vue:10
+msgid "暂无更多动态"
+msgstr ""
+
 #: src/pages/surface/views/firmware/FirmwareDetail.vue:73,
 #: src/pages/surface/views/firmware/FirmwareDetail.vue:71
 msgid "更新日志"
 msgstr "Changelog"
+
+#: src/pages/user/views/project/Project.vue:54
+msgid "服务器错误"
+msgstr ""
 
 #: src/pages/surface/router.js:78
 msgid "未找到页面"
@@ -331,7 +382,7 @@ msgstr "Französisch"
 msgid "版本"
 msgstr "Version"
 
-#: src/pages/surface/layouts/Widget.vue:115
+#: src/pages/surface/layouts/Widget.vue:127
 msgid "特别赞助"
 msgstr "Sondersponsor"
 
@@ -352,7 +403,11 @@ msgstr "Chinesisch (Vereinfacht)"
 msgid "繁体中文"
 msgstr "Chinesisch (Traditionell)"
 
-#: src/pages/surface/layouts/Widget.vue:8
+#: src/pages/user/views/project/Project.vue:6
+msgid "编辑"
+msgstr ""
+
+#: src/pages/surface/layouts/Widget.vue:11
 msgid "网站现在不盈利"
 msgstr "Kauf uns einen Kaffee"
 
@@ -435,7 +490,7 @@ msgstr ""
 msgid "返回上一级"
 msgstr "Zurück"
 
-#: src/pages/surface/layouts/Widget.vue:29
+#: src/pages/surface/layouts/Widget.vue:34
 msgid "销售额的一部分会作为网站的经费："
 msgstr "Ein Teil des Verkaufs wird zur Finanzierung der Website verwendet:"
 
@@ -446,6 +501,14 @@ msgstr "Anleitung lesen"
 #: src/lib/translate/info.js:19
 msgid "韩语"
 msgstr "Koreanisch"
+
+#: src/pages/user/views/project/Project.vue:7
+msgid "项目名称"
+msgstr ""
+
+#: src/pages/user/views/project/Project.vue:13
+msgid "项目描述"
+msgstr ""
 
 #: src/pages/surface/components/HeaderComponent.vue:15,
 #: src/pages/surface/components/HeaderComponent.vue:36,

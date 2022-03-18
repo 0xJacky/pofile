@@ -45,7 +45,6 @@ func parseHeader(item Item) (h *Header, err error) {
 		}
 	}
 	h.rawText = item.MsgStr[0]
-	// fmt.Println(h)
 	return
 }
 
@@ -91,6 +90,7 @@ func parse(path string) (p *Pofile, err error) {
 	boundarySlice[0].Start = 0
 	boundarySlice[boundaryIndex-1].End = lineLen - 1
 	// parse each po entry
+	init := true
 	for _, v := range boundarySlice {
 		// fmt.Println(v.Start+1, v.End+1)
 		item := Item{}
@@ -175,8 +175,9 @@ func parse(path string) (p *Pofile, err error) {
 		}
 		// fmt.Println(item)
 		// fmt.Println("=========")
-		if item.MsgId != "" {
+		if init || item.MsgId != "" {
 			p.Items = append(p.Items, item)
+			init = false
 		}
 	}
 
