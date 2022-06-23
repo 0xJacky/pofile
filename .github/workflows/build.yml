@@ -91,7 +91,7 @@ jobs:
             - name: Build
               run: |
                   mkdir -p dist
-                  go build -ldflags -o dist/pofile -v main.go
+                  go build -o dist/pofile -v main.go
 
             - name: Archive backend artifacts
               uses: actions/upload-artifact@v2
