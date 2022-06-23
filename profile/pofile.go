@@ -1,4 +1,4 @@
-package pofile
+package profile
 
 import (
 	"github.com/itchyny/timefmt-go"
@@ -52,7 +52,7 @@ func parse(path string) (p *Pofile, err error) {
 	var bytes []byte
 	bytes, err = ioutil.ReadFile(path)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "parse read file error")
 	}
 	text := string(bytes)
 	lines := strings.Split(text, "\n")

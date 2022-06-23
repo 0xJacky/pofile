@@ -6,7 +6,76 @@ Gettext po file parse written in Go
 go get github.com/0xJacky/pofile
 ```
 
-## Simple
+or download binary from [Release](https://github.com/0xJacky/pofile/releases) for using cli mode.
+
+## Feature
+1. Parse po file headers to a struct type, provide Get method for getting custom field.
+2. Parse po file items, support translator comments, extracted comments, reference, flags, msgctxt, msgid, msgid_plural, msgstr types.
+3. Automatically ignore fuzzy items.
+4. Parse po file to map[string]interface{} which can be further converted to JSON.
+5. Provide cli mode for parsing pofile(s).
+
+## Type
+1. Pofile
+```
+type Pofile struct {
+	Header Header
+	Items  []Item
+}
+```
+2. Convert pofile to dict
+```
+func (p *Pofile) ToDict() (dict Dict)
+```
+3. Entry
+```
+func Parse(path string) (p *Pofile, err error)
+```
+4. Pofile Header Struct
+```
+type Header struct {
+	ProjectIdVersion        string     `key:"Project-Id-Version"`
+	ReportMsgBugsTo         string     `key:"Report-Msgid-Bugs-To"`
+	POTCreationDate         *time.Time `key:"POT-Creation-Date"`
+	PORevisionDate          *time.Time `key:"PO-Revision-Date"`
+	LastTranslator          string     `key:"Last-Translator"`
+	Language                string     `key:"Language"`
+	LanguageTeam            string     `key:"Language-Team"`
+	ContentType             string     `key:"Content-Type"`
+	ContentTransferEncoding string     `key:"Content-Transfer-Encoding"`
+	PluralForms             string     `key:"Plural-Forms"`
+}
+```
+5. Visit custom header field
+```
+func (h *Header) Get(key string) interface{}
+```
+6. Profile item struct
+```
+type Item struct {
+	TranslatorComments []string
+	ExtractedComments  []string
+	Reference          []string
+	Flags              []string
+	Msgctxt            string
+	MsgId              string
+	MsgIdPlural        string
+	MsgStr             []string
+}
+```
+
+## CLI Mode
+1. Convert a single pofile to JSON.
+```
+./pofile build --file <path-to-pofile>
+```
+
+2. Convert all pofiles from a directory to JSON.
+```
+./pofile build --file <path-to-dir>
+```
+
+## Example
 ```
 package test
 

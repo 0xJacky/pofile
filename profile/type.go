@@ -1,4 +1,4 @@
-package pofile
+package profile
 
 import (
 	"time"

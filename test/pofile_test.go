@@ -3,7 +3,7 @@ package test
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/0xJacky/pofile"
+	"github.com/0xJacky/pofile/profile"
 	"io/ioutil"
 	"log"
 	"path/filepath"
@@ -11,7 +11,7 @@ import (
 )
 
 func TestPofile(t *testing.T) {
-	p, err := pofile.Parse("app.po")
+	p, err := profile.Parse("app.po")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -52,12 +52,12 @@ func TestPofile(t *testing.T) {
 
 	fmt.Println("Test Pofile ToDict")
 	fmt.Println(p.ToDict())
-	dict := make(pofile.Dict)
+	dict := make(profile.Dict)
 
 	lang := []string{"de", "en", "fr", "ja", "ko", "zh_TW"}
 
 	for _, v := range lang {
-		p, err = pofile.Parse(filepath.Join("locale", v, "LC_MESSAGES", "app.po"))
+		p, err = profile.Parse(filepath.Join("locale", v, "LC_MESSAGES", "app.po"))
 		if err != nil {
 			log.Fatalln(err)
 		}

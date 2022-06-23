@@ -1,0 +1,112 @@
+name: Build
+
+on:
+    push:
+        branches: [ master ]
+        paths:
+            - "**/*.go"
+            - "go.mod"
+            - "go.sum"
+            - ".github/workflows/*.yml"
+    pull_request:
+        types: [ opened, synchronize, reopened ]
+        paths:
+          - "**/*.go"
+          - "go.mod"
+          - "go.sum"
+          - ".github/workflows/*.yml"
+    release:
+        types:
+            - published
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                goos: [linux, darwin]
+                goarch: [amd64, 386, arm64]
+                exclude:
+                    # Exclude i386 on darwin.
+                    - goarch: 386
+                      goos: darwin
+        env:
+            CGO_ENABLED: 1
+            GOOS: ${{ matrix.goos }}
+            GOARCH: ${{ matrix.goarch }}
+            DIST: pofile-${{ matrix.GOOS }}-${{ matrix.GOARCH }}
+        outputs:
+            dist: ${{ env.DIST }}
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Set up Go
+              uses: actions/setup-go@v2
+              with:
+                  go-version: ^1.17.7
+
+            - name: Set up cache
+              uses: actions/cache@v2
+              with:
+                  path: |
+                      ~/.cache/go-build
+                      ~/go/pkg/mod
+                  key: ${{ runner.os }}-${{ env.GOOS }}-${{ env.GOARCH }}-go-${{ hashFiles('**/go.sum') }}
+                  restore-keys: |
+                      ${{ runner.os }}-${{ env.GOOS }}-${{ env.GOARCH }}-go-
+
+            - name: Setup compiler environment
+              id: info
+              run: |
+                  export _ARCH=$(jq ".[\"$GOARCH\"].$GOOS" -r < .github/build/compiler_arch.json)
+                  echo "::set-output name=ARCH_NAME::$_ARCH"
+
+            - name: Install musl cross compiler
+              if: env.GOOS == 'linux'
+              uses: Lesmiscore/musl-cross-compilers@v0.5
+              id: musl
+              with:
+                  target: ${{ steps.info.outputs.ARCH_NAME }}-linux-musl
+
+            - name: Post install musl cross compiler
+              if: env.GOOS == 'linux'
+              run: |
+                  echo "PATH=${{ steps.musl.outputs.path }}:$PATH" >> $GITHUB_ENV
+                  echo "CC=${{ steps.info.outputs.ARCH_NAME }}-linux-musl-gcc" >> $GITHUB_ENV
+                  echo "CXX=${{ steps.info.outputs.ARCH_NAME }}-linux-musl-g++" >> $GITHUB_ENV
+                  echo "LD_FLAGS=--extldflags '-static'" >> $GITHUB_ENV
+
+            - name: Install darwin cross compiler
+              if: env.GOOS == 'darwin'
+              run: |
+                  curl -L https://github.com/Hintay/crossosx/releases/latest/download/crossosx.tar.zst -o crossosx.tar.zst
+                  tar xvaf crossosx.tar.zst
+                  echo "LD_LIBRARY_PATH=$(pwd)/crossosx/lib/" >> $GITHUB_ENV
+                  echo "PATH=$(pwd)/crossosx/bin/:$PATH" >> $GITHUB_ENV
+                  echo "CC=${{ steps.info.outputs.ARCH_NAME }}-clang" >> $GITHUB_ENV
+                  echo "CXX=${{ steps.info.outputs.ARCH_NAME }}-clang++" >> $GITHUB_ENV
+                  echo "LD_FLAGS=-s -w" >> $GITHUB_ENV
+
+            - name: Build
+              run: |
+                  mkdir -p dist
+                  go build -ldflags -o dist/pofile -v main.go
+
+            - name: Archive backend artifacts
+              uses: actions/upload-artifact@v2
+              with:
+                  name: ${{ env.DIST }}
+                  path: dist/pofile
+
+            -   name: Prepare publish
+                if: github.event_name == 'release'
+                run: |
+                    cp README*.md ./dist
+                    find dist -printf '%P\n' | tar -C dist --no-recursion -zcvf ${{ env.DIST }}.tar.gz -T -
+
+            -   name: Publish
+                uses: softprops/action-gh-release@v1
+                if: github.event_name == 'release'
+                with:
+                    files: ${{ env.DIST }}.tar.gz
