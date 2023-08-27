@@ -3,7 +3,7 @@ package profile
 import (
 	"github.com/itchyny/timefmt-go"
 	"github.com/pkg/errors"
-	"io/ioutil"
+	"os"
 	"reflect"
 	"regexp"
 	"strings"
@@ -18,7 +18,14 @@ const (
 )
 
 func Parse(path string) (p *Pofile, err error) {
-	p, err = parse(path)
+	var bytes []byte
+	bytes, err = os.ReadFile(path)
+	if err != nil {
+		return nil, errors.Wrap(err, "parse read file error")
+	}
+	text := string(bytes)
+
+	p, err = ParseText(text)
 	return
 }
 
@@ -48,13 +55,7 @@ func parseHeader(item Item) (h *Header, err error) {
 	return
 }
 
-func parse(path string) (p *Pofile, err error) {
-	var bytes []byte
-	bytes, err = ioutil.ReadFile(path)
-	if err != nil {
-		return nil, errors.Wrap(err, "parse read file error")
-	}
-	text := string(bytes)
+func ParseText(text string) (p *Pofile, err error) {
 	lines := strings.Split(text, "\n")
 
 	p = &Pofile{}
