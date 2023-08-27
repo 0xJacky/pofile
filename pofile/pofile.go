@@ -1,4 +1,4 @@
-package profile
+package pofile
 
 import (
 	"github.com/itchyny/timefmt-go"

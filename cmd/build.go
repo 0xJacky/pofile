@@ -1,12 +1,9 @@
 package cmd
 
-/*
-Copyright © 2022 0xJacky <me@jackyu.cn>
-*/
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/0xJacky/pofile/profile"
+	"github.com/0xJacky/pofile/pofile"
 	"github.com/spf13/cobra"
 	"io/fs"
 	"io/ioutil"
@@ -33,7 +30,7 @@ var buildCmd = &cobra.Command{
 }
 
 func buildFromDir() {
-	dict := make(profile.Dict)
+	dict := make(pofile.Dict)
 
 	err := filepath.Walk(dir, func(path string, info fs.FileInfo, err error) error {
 		if err != nil {
@@ -41,7 +38,7 @@ func buildFromDir() {
 			return err
 		}
 		if strings.Contains(info.Name(), ".po") {
-			p, err := profile.Parse(path)
+			p, err := pofile.Parse(path)
 			if err != nil {
 				return err
 			}
@@ -66,8 +63,8 @@ func buildFromDir() {
 }
 
 func buildFromFile() {
-	dict := make(profile.Dict)
-	p, err := profile.Parse(file)
+	dict := make(pofile.Dict)
+	p, err := pofile.Parse(file)
 	if err != nil {
 		log.Fatalln("[profile parse err]", file, err)
 	}
