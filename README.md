@@ -2,7 +2,7 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/0xJacky/pofile)](https://goreportcard.com/report/github.com/0xJacky/pofile)
 [![Go Reference](https://pkg.go.dev/badge/github.com/0xJacky/pofile.svg)](https://pkg.go.dev/github.com/0xJacky/pofile)
-[![License](https://img.shields.io/github/license/0xJacky/pofile)](https://github.com/0xJacky/pofile/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/0xJacky/pofile)](https://github.com/0xJacky/pofile/blob/main/LICENSE)
 
 A Gettext `.po` file parser written in Go.
 
