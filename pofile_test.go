@@ -1,17 +1,16 @@
-package test
+package pofile
 
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/0xJacky/pofile/pofile"
-	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"testing"
 )
 
 func TestPofile(t *testing.T) {
-	p, err := pofile.Parse("app.po")
+	p, err := Parse("test_data/app.po")
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -48,16 +47,16 @@ func TestPofile(t *testing.T) {
 
 	// Test Pofile ToDict
 	bytes, _ := json.Marshal(p.ToDict())
-	_ = ioutil.WriteFile("output_test.json", bytes, 0644)
+	_ = os.WriteFile("test_data/output_test.json", bytes, 0644)
 
 	fmt.Println("Test Pofile ToDict")
 	fmt.Println(p.ToDict())
-	dict := make(pofile.Dict)
+	dict := make(Dict)
 
 	lang := []string{"de", "en", "fr", "ja", "ko", "zh_TW"}
 
 	for _, v := range lang {
-		p, err = pofile.Parse(filepath.Join("locale", v, "LC_MESSAGES", "app.po"))
+		p, err = Parse(filepath.Join("test_data/locale", v, "LC_MESSAGES", "app.po"))
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -65,5 +64,5 @@ func TestPofile(t *testing.T) {
 	}
 
 	bytes, _ = json.Marshal(dict)
-	_ = ioutil.WriteFile("translates.json", bytes, 0644)
+	_ = os.WriteFile("test_data/translates.json", bytes, 0644)
 }

@@ -1,38 +1,145 @@
 # Pofile
-Gettext po file parse written in Go
 
-## Install
-```
+[![Go Report Card](https://goreportcard.com/badge/github.com/0xJacky/pofile)](https://goreportcard.com/report/github.com/0xJacky/pofile)
+[![Go Reference](https://pkg.go.dev/badge/github.com/0xJacky/pofile.svg)](https://pkg.go.dev/github.com/0xJacky/pofile)
+[![License](https://img.shields.io/github/license/0xJacky/pofile)](https://github.com/0xJacky/pofile/blob/master/LICENSE)
+
+A Gettext `.po` file parser written in Go.
+
+## Features
+
+- Parse po file headers into a structured format with easy access methods
+- Full support for parsing po file elements:
+  - Translator comments
+  - Extracted comments
+  - References
+  - Flags
+  - Message context (msgctxt)
+  - Message ID (msgid)
+  - Plural message ID (msgid_plural)
+  - Translations (msgstr)
+- Automatic handling of fuzzy translations
+- Convert po files to map/dictionary format (suitable for JSON conversion)
+- Command-line interface for batch processing of po files
+
+## Installation
+
+### Library
+
+```bash
 go get github.com/0xJacky/pofile
 ```
 
-or download binary from [Release](https://github.com/0xJacky/pofile/releases) for using cli mode.
+### CLI Tool
 
-## Feature
-1. Parse po file headers to a struct type, provide Get method for getting custom field.
-2. Parse po file items, support translator comments, extracted comments, reference, flags, msgctxt, msgid, msgid_plural, msgstr types.
-3. Automatically ignore fuzzy items.
-4. Parse po file to map[string]interface{} which can be further converted to JSON.
-5. Provide cli mode for parsing pofile(s).
+Download the binary from [Releases](https://github.com/0xJacky/pofile/releases) or install from source:
 
-## Type
-1. Pofile
+```bash
+go install github.com/0xJacky/pofile/cmd/pofile@latest
 ```
+
+## Usage
+
+### Library Usage
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/0xJacky/pofile"
+	"log"
+	"os"
+)
+
+func main() {
+	// Parse a po file
+	p, err := pofile.Parse("path/to/your.po")
+	if err != nil {
+		log.Fatalf("Failed to parse po file: %v", err)
+	}
+	
+	// Access header information
+	fmt.Printf("Language: %s\n", p.Header.Language)
+	fmt.Printf("Custom header field: %v\n", p.Header.Get("X-Generator"))
+	
+	// Process translations
+	for _, item := range p.Items {
+		fmt.Printf("Original: %s\n", item.MsgId)
+		fmt.Printf("Translation: %s\n", item.MsgStr[0])
+	}
+	
+	// Convert to dictionary and save as JSON
+	dict := p.ToDict()
+	bytes, _ := json.MarshalIndent(dict, "", "  ")
+	os.WriteFile("translations.json", bytes, 0644)
+}
+```
+
+### Multiple Language Support
+
+```go
+package main
+
+import (
+	"encoding/json"
+	"github.com/0xJacky/pofile"
+	"log"
+	"os"
+	"path/filepath"
+)
+
+func main() {
+	dict := make(pofile.Dict)
+	languages := []string{"de", "en", "fr", "ja", "ko", "zh_TW"}
+	
+	for _, lang := range languages {
+		poPath := filepath.Join("locale", lang, "LC_MESSAGES", "app.po")
+		p, err := pofile.Parse(poPath)
+		if err != nil {
+			log.Printf("Failed to parse %s: %v", poPath, err)
+			continue
+		}
+		dict[p.Header.Language] = p.ToDict()
+	}
+	
+	bytes, _ := json.MarshalIndent(dict, "", "  ")
+	os.WriteFile("all_translations.json", bytes, 0644)
+}
+```
+
+### CLI Usage
+
+Convert a single po file to JSON:
+
+```bash
+pofile build --file path/to/file.po
+```
+
+Convert all po files in a directory:
+
+```bash
+pofile build --file path/to/directory
+```
+
+## API Reference
+
+### Core Types
+
+#### Pofile
+```go
 type Pofile struct {
 	Header Header
 	Items  []Item
 }
+
+// Convert pofile to dictionary format
+func (p *Pofile) ToDict() Dict
 ```
-2. Convert pofile to dict
-```
-func (p *Pofile) ToDict() (dict Dict)
-```
-3. Entry
-```
-func Parse(path string) (p *Pofile, err error)
-```
-4. Pofile Header Struct
-```
+
+#### Header
+```go
 type Header struct {
 	ProjectIdVersion        string     `key:"Project-Id-Version"`
 	ReportMsgBugsTo         string     `key:"Report-Msgid-Bugs-To"`
@@ -45,13 +152,13 @@ type Header struct {
 	ContentTransferEncoding string     `key:"Content-Transfer-Encoding"`
 	PluralForms             string     `key:"Plural-Forms"`
 }
-```
-5. Visit custom header field
-```
+
+// Get custom header field
 func (h *Header) Get(key string) interface{}
 ```
-6. Profile item struct
-```
+
+#### Item
+```go
 type Item struct {
 	TranslatorComments []string
 	ExtractedComments  []string
@@ -64,87 +171,13 @@ type Item struct {
 }
 ```
 
-## CLI Mode
-1. Convert a single pofile to JSON.
-```
-./pofile build --file <path-to-pofile>
-```
+### Main Functions
 
-2. Convert all pofiles from a directory to JSON.
-```
-./pofile build --file <path-to-dir>
+```go
+// Parse a .po file at the specified path
+func Parse(path string) (p *Pofile, err error)
 ```
 
-## Example
-```
-package test
+## License
 
-import (
-	"encoding/json"
-	"fmt"
-	"github.com/0xJacky/pofile"
-	"io/ioutil"
-	"log"
-	"path/filepath"
-	"testing"
-)
-
-func TestPofile(t *testing.T) {
-	p, err := pofile.Parse("en.po")
-	if err != nil {
-		log.Fatalln(err)
-	}
-	fmt.Println("Test Header")
-	header := p.Header
-	fmt.Println("ProjectIdVersion", header.ProjectIdVersion)
-	fmt.Println("ReportMsgBugsTo", header.ReportMsgBugsTo)
-	fmt.Println("POTCreationDate", header.POTCreationDate)
-	fmt.Println("PORevisionDate", header.PORevisionDate)
-	fmt.Println("LastTranslator", header.LastTranslator)
-	fmt.Println("Language", header.Language)
-	fmt.Println("LanguageTeam", header.LanguageTeam)
-	fmt.Println("ContentType", header.ContentType)
-	fmt.Println("ContentTransferEncoding", header.ContentTransferEncoding)
-	fmt.Println("PluralForms", header.PluralForms)
-
-	fmt.Println("==========")
-	fmt.Println("Test Header.Get")
-	fmt.Println(header.Get("X-Generator"))
-	fmt.Println("==========")
-
-	fmt.Println("Test Items")
-	for _, item := range p.Items {
-		fmt.Println("TranslatorComments", item.TranslatorComments)
-		fmt.Println("ExtractedComments", item.ExtractedComments)
-		fmt.Println("Reference", item.Reference)
-		fmt.Println("Flags", item.Flags)
-		fmt.Println("Msgctxt", item.Msgctxt)
-		fmt.Println("MsgId", item.MsgId)
-		fmt.Println("MsgIdPlural", item.MsgIdPlural)
-		fmt.Println("MsgStr", item.MsgStr)
-		fmt.Println("==========")
-	}
-
-	// Test Pofile ToDict
-	bytes, _ := json.Marshal(p.ToDict())
-	_ = ioutil.WriteFile("output_test.json", bytes, 0644)
-
-	fmt.Println("Test Pofile ToDict")
-	fmt.Println(p.ToDict())
-	dict := make(pofile.Dict)
-
-	lang := []string{"de", "en", "fr", "ja", "ko", "zh_TW"}
-
-	for _, v := range lang {
-		p, err = pofile.Parse(filepath.Join("locale", v, "LC_MESSAGES", "app.po"))
-		if err != nil {
-			log.Fatalln(err)
-		}
-		dict[p.Header.Language] = p.ToDict()
-	}
-
-	bytes, _ = json.Marshal(dict)
-	_ = ioutil.WriteFile("translates.json", bytes, 0644)
-}
-
-```
+MIT

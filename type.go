@@ -33,3 +33,5 @@ type Pofile struct {
 	Header Header
 	Items  []Item
 }
+
+type Dict map[string]any

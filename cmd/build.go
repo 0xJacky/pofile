@@ -3,13 +3,15 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/0xJacky/pofile/pofile"
-	"github.com/spf13/cobra"
 	"io/fs"
-	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/0xJacky/pofile"
+
+	"github.com/spf13/cobra"
 )
 
 var dir string
@@ -56,7 +58,7 @@ func buildFromDir() {
 	if err != nil {
 		log.Fatal("json marshal error", err)
 	}
-	err = ioutil.WriteFile("translations.json", bytes, 0644)
+	err = os.WriteFile("translations.json", bytes, 0644)
 	if err != nil {
 		log.Fatal("write file error", err)
 	}
@@ -74,7 +76,7 @@ func buildFromFile() {
 	if err != nil {
 		log.Fatal("json marshal error", err)
 	}
-	err = ioutil.WriteFile("translations.json", bytes, 0644)
+	err = os.WriteFile("translations.json", bytes, 0644)
 	if err != nil {
 		log.Fatal("write file error", err)
 	}

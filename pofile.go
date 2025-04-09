@@ -204,8 +204,6 @@ func (h *Header) Get(key string) interface{} {
 	return strings.ReplaceAll(matchSlice[1], "\\n", "")
 }
 
-type Dict map[string]interface{}
-
 func (item *Item) isFuzzy() bool {
 	for _, v := range item.Flags {
 		if v == "fuzzy" {
