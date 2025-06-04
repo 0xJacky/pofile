@@ -1,12 +1,15 @@
 package pofile
 
 import (
-	"github.com/itchyny/timefmt-go"
-	"github.com/pkg/errors"
 	"os"
 	"reflect"
 	"regexp"
 	"strings"
+
+	"slices"
+
+	"github.com/itchyny/timefmt-go"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -36,23 +39,85 @@ func parseHeader(item Item) (h *Header, err error) {
 	// fmt.Println(item.MsgStr[0])
 	for i := 0; i < v.NumField()-1; i++ {
 		key := v.Type().Field(i).Tag.Get("key")
-		regExp := regexp.MustCompile(key + `:[ ]+(.*?)\\n`)
+		// 使用与 Header.Get 相同的正则表达式
+		regExp := regexp.MustCompile(key + ":[ ]+(.*?)(?:\\n|$)")
 		matchSlice := regExp.FindStringSubmatch(item.MsgStr[0])
-		if len(matchSlice) < 1 {
+		if len(matchSlice) < 2 {
 			continue
 		}
-		match := strings.ReplaceAll(matchSlice[1], "\\n", "")
+		match := strings.TrimSpace(matchSlice[1])
+
 		if v.Type().Field(i).Type.String() == "string" {
 			v.Field(i).Set(reflect.ValueOf(match))
 		}
 
 		if v.Type().Field(i).Type.String() == "*time.Time" {
-			t, _ := timefmt.Parse(match, "%Y-%m-%d %H:%M%z")
-			v.Field(i).Set(reflect.ValueOf(&t))
+			if match != "" {
+				t, parseErr := timefmt.Parse(match, "%Y-%m-%d %H:%M%z")
+				if parseErr == nil {
+					v.Field(i).Set(reflect.ValueOf(&t))
+				}
+			}
 		}
 	}
 	h.rawText = item.MsgStr[0]
 	return
+}
+
+// extractQuotedString 提取引号内的字符串内容并正确处理转义字符
+func extractQuotedString(line string) string {
+	// 寻找第一个未转义的双引号
+	start := -1
+	for i, r := range line {
+		if r == '"' {
+			// 检查是否被转义
+			backslashCount := 0
+			for j := i - 1; j >= 0 && line[j] == '\\'; j-- {
+				backslashCount++
+			}
+			// 如果反斜杠数量为偶数（包括0），则双引号未被转义
+			if backslashCount%2 == 0 {
+				start = i
+				break
+			}
+		}
+	}
+
+	if start == -1 {
+		return ""
+	}
+
+	// 寻找匹配的结束双引号
+	end := -1
+	for i := start + 1; i < len(line); i++ {
+		if line[i] == '"' {
+			// 检查是否被转义
+			backslashCount := 0
+			for j := i - 1; j >= 0 && line[j] == '\\'; j-- {
+				backslashCount++
+			}
+			// 如果反斜杠数量为偶数，则双引号未被转义
+			if backslashCount%2 == 0 {
+				end = i
+				break
+			}
+		}
+	}
+
+	if end == -1 {
+		return ""
+	}
+
+	// 提取并处理转义字符
+	result := line[start+1 : end]
+	// 处理转义序列
+	result = strings.ReplaceAll(result, "\\\"", "\"")
+	result = strings.ReplaceAll(result, "\\\\", "\\")
+	result = strings.ReplaceAll(result, "\\n", "\n")
+	result = strings.ReplaceAll(result, "\\t", "\t")
+	result = strings.ReplaceAll(result, "\\r", "\r")
+
+	return result
 }
 
 func ParseText(text string) (p *Pofile, err error) {
@@ -87,7 +152,7 @@ func ParseText(text string) (p *Pofile, err error) {
 			boundaryIndex++
 		}
 	}
-	// fix header and bottom
+	// fixed header and bottom boundary
 	boundarySlice[0].Start = 0
 	boundarySlice[boundaryIndex-1].End = lineLen - 1
 	// parse each po entry
@@ -120,57 +185,39 @@ func ParseText(text string) (p *Pofile, err error) {
 				line = strings.TrimPrefix(line, "#, ")
 				item.Flags = strings.Split(line, ",")
 			} else if strings.HasPrefix(line, "msgctxt") {
-				regExp := regexp.MustCompile("^msgctxt\\s+\"(.*)\"")
-				matchSlice := regExp.FindStringSubmatch(line)
 				state = MSGCTXT
-				if len(matchSlice) < 2 {
-					continue
-				}
-				item.Msgctxt += matchSlice[1]
+				extracted := extractQuotedString(line)
+				item.Msgctxt += extracted
 			} else if strings.HasPrefix(line, "msgid") &&
 				!strings.HasPrefix(line, "msgid_plural") {
-				regExp := regexp.MustCompile("^msgid\\s+\"(.*)\"")
-				matchSlice := regExp.FindStringSubmatch(line)
 				state = MSGID
-				if len(matchSlice) < 2 {
-					continue
-				}
-				item.MsgId += matchSlice[1]
+				extracted := extractQuotedString(line)
+				item.MsgId += extracted
 			} else if strings.HasPrefix(line, "msgstr") {
-				regExp := regexp.MustCompile("^msgstr[\\s\\S]*\"(.*)\"")
-				matchSlice := regExp.FindStringSubmatch(line)
 				state = MSGSTR
-				if len(matchSlice) < 2 {
-					continue
-				}
+				extracted := extractQuotedString(line)
 				msgStrIndex++
-				item.MsgStr = append(item.MsgStr, matchSlice[1])
+				item.MsgStr = append(item.MsgStr, extracted)
 			} else if strings.HasPrefix(line, "msgid_plural") {
-				regExp := regexp.MustCompile("^msgid_plural\\s+\"(.*)\"")
-				matchSlice := regExp.FindStringSubmatch(line)
 				state = MSGIDPLURAL
-				if len(matchSlice) < 2 {
-					continue
-				}
-				item.MsgIdPlural += matchSlice[1]
+				extracted := extractQuotedString(line)
+				item.MsgIdPlural += extracted
 			} else if strings.HasPrefix(line, "#~") {
 				// ignore
 				break
 			} else {
-				strRegExp := regexp.MustCompile("\"(.*)\"")
-				matchSlice := strRegExp.FindStringSubmatch(line)
-				if len(matchSlice) < 2 {
-					continue
-				}
-				switch state {
-				case MSGCTXT:
-					item.Msgctxt += matchSlice[1]
-				case MSGID:
-					item.MsgId += matchSlice[1]
-				case MSGIDPLURAL:
-					item.MsgIdPlural += matchSlice[1]
-				case MSGSTR:
-					item.MsgStr[msgStrIndex] += matchSlice[1]
+				extracted := extractQuotedString(line)
+				if extracted != "" {
+					switch state {
+					case MSGCTXT:
+						item.Msgctxt += extracted
+					case MSGID:
+						item.MsgId += extracted
+					case MSGIDPLURAL:
+						item.MsgIdPlural += extracted
+					case MSGSTR:
+						item.MsgStr[msgStrIndex] += extracted
+					}
 				}
 			}
 		}
@@ -196,21 +243,16 @@ func ParseText(text string) (p *Pofile, err error) {
 }
 
 func (h *Header) Get(key string) interface{} {
-	regExp := regexp.MustCompile(key + ":[ ]+(.*?)\\\\n")
+	regExp := regexp.MustCompile(key + ":[ ]+(.*?)(?:\\n|$)")
 	matchSlice := regExp.FindStringSubmatch(h.rawText)
-	if len(matchSlice) < 1 {
+	if len(matchSlice) < 2 {
 		return nil
 	}
-	return strings.ReplaceAll(matchSlice[1], "\\n", "")
+	return strings.TrimSpace(matchSlice[1])
 }
 
 func (item *Item) isFuzzy() bool {
-	for _, v := range item.Flags {
-		if v == "fuzzy" {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(item.Flags, "fuzzy")
 }
 
 func (p *Pofile) ToDict() (dict Dict) {
@@ -229,9 +271,7 @@ func (p *Pofile) ToDict() (dict Dict) {
 			tmp = item.MsgStr[0]
 		} else if len(item.MsgStr) > 1 {
 			var msgStrSlice []string
-			for _, v := range item.MsgStr {
-				msgStrSlice = append(msgStrSlice, v)
-			}
+			msgStrSlice = append(msgStrSlice, item.MsgStr...)
 			tmp = msgStrSlice
 		}
 		if item.Msgctxt != "" {

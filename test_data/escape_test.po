@@ -1,0 +1,17 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Test\n"
+"Language: zh_CN\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "To confirm revocation, please type \"Revoke\" in the field below:"
+msgstr "要确认撤销，请在下面的字段中输入 \"撤销\"："
+
+msgid "The \"Settings\" menu"
+msgstr "\"设置\" 菜单"
+
+msgid "Click \"OK\" to continue"
+msgstr "点击 \"确定\" 继续"
+
+msgid "Use \"double quotes\" in text"
+msgstr "在文本中使用 \"双引号\"" 

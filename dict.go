@@ -129,6 +129,13 @@ func replacePlaceholders(text string, data any) (string, error) {
 		for k, val := range v {
 			jsonMap[k] = val
 		}
+	case int, int32, int64, float32, float64, bool, string:
+		// Basic types cannot be used for placeholder replacement
+		return text, &TranslateError{
+			Type:    "invalid_argument",
+			Message: fmt.Sprintf("basic type %T cannot be used for placeholder replacement", v),
+			Err:     ErrInvalidArgument,
+		}
 	default:
 		// For structs and other complex types, use JSON marshaling/unmarshaling
 		jsonData, err := json.Marshal(data)
