@@ -5,7 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"regexp"
-	"strings"
+
+	"github.com/spf13/cast"
 )
 
 // TranslateError represents a specific translation error
@@ -26,31 +27,9 @@ func (e *TranslateError) Error() string {
 var (
 	// ErrKeyNotFound is returned when a translation key is not found in the dictionary
 	ErrKeyNotFound = errors.New("translation key not found")
-	// ErrJSONMarshal is returned when JSON marshaling fails
-	ErrJSONMarshal = errors.New("failed to marshal JSON data")
-	// ErrJSONUnmarshal is returned when JSON unmarshaling fails
-	ErrJSONUnmarshal = errors.New("failed to unmarshal JSON data")
 	// ErrInvalidArgument is returned when an invalid argument type is provided
 	ErrInvalidArgument = errors.New("invalid argument type")
 )
-
-// toCount converts various numeric types to int
-func toCount(v any) (int, error) {
-	switch val := v.(type) {
-	case int:
-		return val, nil
-	case float64:
-		return int(val), nil
-	case int64:
-		return int(val), nil
-	default:
-		return 0, &TranslateError{
-			Type:    "invalid_count",
-			Message: fmt.Sprintf("expected number as count but got %T", v),
-			Err:     ErrInvalidArgument,
-		}
-	}
-}
 
 // getPluralForm returns the appropriate form based on count and available forms
 func getPluralForm(forms []string, count int) string {
@@ -78,9 +57,13 @@ func (d Dict) Translate(key string, args ...any) (string, error) {
 		}
 	}
 
+	if msgStr == "" {
+		msgStr = key
+	}
+
 	// No arguments case - return the message string directly
 	if len(args) == 0 {
-		return toString(msgStr), nil
+		return cast.ToString(msgStr), nil
 	}
 
 	// Process placeholder replacement with single map argument
@@ -88,7 +71,7 @@ func (d Dict) Translate(key string, args ...any) (string, error) {
 		// Handle string array case
 		if strs, ok := args[0].([]string); ok {
 			if len(strs) == 0 {
-				return toString(msgStr), &TranslateError{
+				return cast.ToString(msgStr), &TranslateError{
 					Type:    "empty_string_array",
 					Message: "string array is empty",
 					Err:     ErrInvalidArgument,
@@ -98,7 +81,7 @@ func (d Dict) Translate(key string, args ...any) (string, error) {
 		}
 
 		// Replace placeholders with any type of data
-		return replacePlaceholders(toString(msgStr), args[0])
+		return replacePlaceholders(cast.ToString(msgStr), args[0])
 	}
 
 	// Handle plurality cases
@@ -107,7 +90,7 @@ func (d Dict) Translate(key string, args ...any) (string, error) {
 	}
 
 	// Unhandled case
-	return toString(msgStr), &TranslateError{
+	return cast.ToString(msgStr), &TranslateError{
 		Type:    "invalid_argument",
 		Message: fmt.Sprintf("unexpected argument pattern with %d arguments", len(args)),
 		Err:     ErrInvalidArgument,
@@ -160,7 +143,7 @@ func replacePlaceholders(text string, data any) (string, error) {
 	result := re.ReplaceAllStringFunc(text, func(match string) string {
 		key := match[2 : len(match)-1] // Extract key from %{key}
 		if val, ok := jsonMap[key]; ok {
-			return toString(val)
+			return cast.ToString(val)
 		}
 		return match
 	})
@@ -175,7 +158,7 @@ func handlePlurality(msgStr any, args []any) (string, error) {
 	// Case: nil/string, count
 	if len(args) == 2 {
 		if !isStrArray {
-			return toString(msgStr), &TranslateError{
+			return cast.ToString(msgStr), &TranslateError{
 				Type:    "invalid_message_format",
 				Message: "message is not a string array for plurality handling",
 				Err:     ErrInvalidArgument,
@@ -183,38 +166,22 @@ func handlePlurality(msgStr any, args []any) (string, error) {
 		}
 
 		if len(strs) == 0 {
-			return toString(msgStr), &TranslateError{
+			return cast.ToString(msgStr), &TranslateError{
 				Type:    "empty_string_array",
 				Message: "message string array is empty",
 				Err:     ErrInvalidArgument,
 			}
 		}
 
-		count, err := toCount(args[1])
-		if err != nil {
-			return toString(msgStr), err
-		}
+		count := cast.ToInt(args[1])
 
 		return getPluralForm(strs, count), nil
 	}
 
 	// This should never happen given our caller checks
-	return toString(msgStr), &TranslateError{
+	return cast.ToString(msgStr), &TranslateError{
 		Type:    "invalid_argument",
 		Message: "unexpected plurality pattern",
 		Err:     ErrInvalidArgument,
-	}
-}
-
-// Helper function to convert any to string
-func toString(v any) string {
-	switch val := v.(type) {
-	case string:
-		return val
-	case int, int64, float64, bool:
-		return strings.TrimSpace(strings.Trim(fmt.Sprintf("%v", val), "\""))
-	default:
-		jsonData, _ := json.Marshal(val)
-		return string(jsonData)
 	}
 }
